@@ -1,23 +1,14 @@
-#include "UnionFind.h"
-#include <vector>
-#include "UnionFind.h"
+#include "WeightedQuickUnion.h"
 
-class CWeightedQuickUnion : public CUnionFind {
-    private: 
-    std::vector<std::size_t> parent;
-    std::vector<std::size_t> treeSize;
-    std::size_t groupCount = 0;
-    
-public:
-std::size_t CWeightedQuickUnion::Size() const override{
-return parent.size();
+std::size_t CWeightedQuickUnion::Size() const {
+    return parent.size();
 }
 
-std::size_t CWeightedQuickUnion::GroupCount() const override{
-return groupCount;
+std::size_t CWeightedQuickUnion::GroupCount() const{
+    return groupCount;
 }
 
-CUnionFind::TElementID CWeightedQuickUnion::AddElement() override{
+CUnionFind::TElementID CWeightedQuickUnion::AddElement() {
 TElementID newID = parent.size();
 
     parent.push_back(newID);
@@ -27,7 +18,7 @@ TElementID newID = parent.size();
     return newID;
 }
 
-CUnionFind::TGroupID CWeightedQuickUnion::Find(TElementID a) const override{
+CUnionFind::TGroupID CWeightedQuickUnion::Find(TElementID a) const {
       if (a >= parent.size()) {
         return InvalidGroupID;
     }
@@ -40,11 +31,11 @@ CUnionFind::TGroupID CWeightedQuickUnion::Find(TElementID a) const override{
     return temp;
 }
 
-bool CWeightedQuickUnion::Connected(TElementID a, TElementID b) override{
+bool CWeightedQuickUnion::Connected(TElementID a, TElementID b) {
     TElementID a1;
     TElementID b1;
-    a1 = find(a);
-    b1 = find(b);
+    a1 = Find(a);
+    b1 = Find(b);
 
     if (a1 == InvalidGroupID || b1 == InvalidGroupID) {
         return false;
@@ -56,12 +47,12 @@ bool CWeightedQuickUnion::Connected(TElementID a, TElementID b) override{
     }
 }
 
-bool CWeightedQuickUnion::Union(TElementID a, TElementID b) override{
+bool CWeightedQuickUnion::Union(TElementID a, TElementID b){
      if (a >= parent.size() || b >= parent.size()) {
         return false;
     }
     TElementID rootA = Find(a);
-TElementID rootB = Find(b);
+    TElementID rootB = Find(b);
     TElementID TSa = treeSize[rootA];
     TElementID TSb = treeSize[rootB];
 
@@ -82,4 +73,4 @@ TElementID rootB = Find(b);
 
     }
 }
-}
+

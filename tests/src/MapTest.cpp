@@ -10,7 +10,7 @@ class MapTest : public ::testing::Test {
 };
 
 
-using GMapImplementations = ::testing::Types<YOUR_IMPLEMENTATION<int,int>>;
+using GMapImplementations = ::testing::Types<CVectorMap<int,int>>;
 
 
 TYPED_TEST_SUITE(MapTest, GMapImplementations);

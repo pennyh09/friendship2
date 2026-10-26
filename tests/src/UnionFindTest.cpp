@@ -10,7 +10,7 @@ class UnionFindTest : public ::testing::Test {
 };
 
 
-using GDequeImplementations = ::testing::Types<YOUR_IMPLEMENTATION>;
+using GDequeImplementations = ::testing::Types<CWeightedQuickUnion>;
 
 
 TYPED_TEST_SUITE(UnionFindTest, GDequeImplementations);
