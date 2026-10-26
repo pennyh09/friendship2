@@ -1,0 +1,9 @@
+.DS_Store
+.idea/
+.vscode/
+obj/
+bin/
+tests/obj/
+tests/bin/
+tests/htmlconv/
+*.o
