@@ -17,16 +17,30 @@ public:
     }
 
     bool Add(const K& key, V val) override {
-        for(std::size_t i = 0 ; i < keys.size(); i++){
-        if(keys[i]==key){
-            return false; 
+        std::size_t left = 0;
+        std::size_t right = keys.size();
+
+        while(left<right){
+                std::size_t mid = left + (right - left) / 2;
+
+            if (key < keys[mid]) {
+                right = mid;
+            }          
+            else if (key > keys[mid]) {
+                left = mid + 1;
+            }
+            else {
+                values[mid] = val;
+                return true;
+            }
+           
         }
-    }
-    keys.push_back(key);
-    values.push_back(val);
+    keys.insert(keys.begin() + left, key);
+    values.insert(values.begin() + left, val);
     return true;
 
     }
+    //alphabetical now 
 
     bool Remove(const K& key) override {
         for(std::size_t i = 0 ; i < keys.size(); i++){
@@ -42,14 +56,28 @@ public:
     
 
     bool Find(const K& key, V& val) const override {
-         for(std::size_t i = 0 ; i < keys.size(); i++){
-            if(keys[i]==key){
-                val = values[i];
+        std::size_t left = 0;
+        std::size_t right = keys.size();
+
+        while(left<right){
+                std::size_t mid = left + (right - left) / 2;
+
+            if (key < keys[mid]) {
+                right = mid;
+            }          
+            else if (key > keys[mid]) {
+                left = mid + 1;
+            }
+            else {
+                val = values[mid];
                 return true;
             }
+           
         }
         return false;
+
     }
+    //swapped to binary search 
 
     void ForEach(typename CMap<K, V>::TEntityFunction fun) override {
         
