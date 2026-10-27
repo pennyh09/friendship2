@@ -6,21 +6,6 @@
 #include <cstddef>
 
 template <typename K, typename V>
-class CMap {
-public:
-    using TEntityFunction = std::function<void(const K&, const V&)>;
-
-    virtual ~CMap() = default;
-
-    virtual std::size_t Size() const = 0;
-    virtual bool Add(const K& key, V val) = 0;
-    virtual bool Remove(const K& key) = 0;
-    virtual bool Find(const K& key, V& val) const = 0;
-    virtual void ForEach(TEntityFunction fun) = 0;
-};
-
-
-template <typename K, typename V>
 class CVectorMap : public CMap<K, V> {
 private:
     std::vector<K> keys;

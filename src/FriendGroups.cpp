@@ -1,8 +1,7 @@
 #include "FriendGroups.h"
-#include "FriendGroups.h"
 #include "VectorMap.h"
-#include "UnionFind.h"
-
+#include "WeightedQuickUnion.h"
+#include <iostream>
 
 struct CFriendGroups::SImplementation{
     CVectorMap<TName, std::size_t> map;
@@ -61,28 +60,35 @@ void CFriendGroups::AddFriendship(const TConnection &friendship) noexcept{
 std::vector<CFriendGroups::TConnection> CFriendGroups::FriendshipsForSingleGroup() noexcept{
     std::vector<TConnection> connections;
     std::vector<std::size_t> roots; 
-    std::vector<std::size_t> ids; 
-    std::vector<TName> names;
 
-    std::size_t minFriendship = DImplementation->unionFind.GroupCount() - 1;
+    std::vector<TName> names;
+    std::cout << "Group count: "
+          << DImplementation->unionFind.GroupCount()
+          << '\n';
+
     if (DImplementation->unionFind.GroupCount() <= 1 ){
         return connections; //no other friends no friendship
     }
     
-    DImplementation->map.ForEach[&](const TName& name, const std::size_t& id{
+    DImplementation->map.ForEach(
+        [&](const TName& name, const std::size_t& id){
         std::size_t root = DImplementation->unionFind.Find(id);
-    for(int i = 0 ;i < roots.size(); i++){
+    for(std::size_t i = 0 ;i < roots.size(); i++){
         if(roots[i]== root){
             return;
         }
     }
             roots.push_back(root);
-            ids.push_back(id);
-            names.push_back(name)
-});
-    for(int i = 0 ; i<names.size()-1 ; i++){
+            names.push_back(name);
+}
+);
+
+
+          std::cout << "Before loop: " << connections.size() << '\n';
+    for(std::size_t i = 0 ; i + 1<names.size(); i++){
         connections.push_back({names[i], names[i+1]});
     }
+  
     return connections;
 
 }
