@@ -33,3 +33,12 @@ TEST_F(FriendGroupsTest, SingleGroupTest){
         EXPECT_TRUE(MaxFriend == "C" || MaxFriend == "D");
     }
 }
+
+TEST_F(FriendGroupsTest, EmptyGroupsTest) {
+    CFriendGroups groups;
+
+    auto connections = groups.FriendshipsForSingleGroup();
+
+    EXPECT_TRUE(connections.empty());
+}
+
