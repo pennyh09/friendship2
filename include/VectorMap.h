@@ -30,8 +30,7 @@ public:
                 left = mid + 1;
             }
             else {
-                values[mid] = val;
-                return true;
+               return false;
             }
            
         }

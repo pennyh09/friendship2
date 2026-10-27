@@ -62,9 +62,7 @@ std::vector<CFriendGroups::TConnection> CFriendGroups::FriendshipsForSingleGroup
     std::vector<std::size_t> roots; 
 
     std::vector<TName> names;
-    std::cout << "Group count: "
-          << DImplementation->unionFind.GroupCount()
-          << '\n';
+  
 
     if (DImplementation->unionFind.GroupCount() <= 1 ){
         return connections; //no other friends no friendship
@@ -84,7 +82,7 @@ std::vector<CFriendGroups::TConnection> CFriendGroups::FriendshipsForSingleGroup
 );
 
 
-          std::cout << "Before loop: " << connections.size() << '\n';
+       
     for(std::size_t i = 0 ; i + 1<names.size(); i++){
         connections.push_back({names[i], names[i+1]});
     }
