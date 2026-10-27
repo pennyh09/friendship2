@@ -14,28 +14,24 @@ Fill out the remain parts of the following tables.
 Scale the instructor numbers with the I-to-S scaling.
 | File           | I People | I Con   | I Add Con  | I Time (ns) | S Con   | S Add Con  | S Time (ns) |
 |----------------|----------|---------|------------|-------------|---------|------------|-------------|
-| friends1.csv   | 10       | 19      | 0          | 99,149    |   19      |      0      |     85167        |
-| friendssm.csv  | 10       | 12      | 1          | 59161     |  12       |       1     |      49500       |
-| friendsmed.csv | 1,000    | 3,927   | 4          | 15130785  |  3926       |      4      |        23392250     |
-| friendslg.csv  | 100,000  | 416,102 | 29         |1336145492 |   416102      |    29        |     84551167413        |
+| friends1.csv   | 10       | 19      | 0          | 99,149    |   19      |      0      |     15125      |
+| friendssm.csv  | 10       | 12      | 1          | 59161     |  12       |       1     |      11583       |
+| friendsmed.csv | 1,000    | 3,927   | 4          | 15130785  |  3926       |      4      |        2065750   |
+| friendslg.csv  | 100,000  | 416,102 | 29         |1336145492 |   416102      |    29        |     286,209,375       |
 
 
 ## Analysis
 Answer the questions below.
 
 ### What seems to be the growth rate for your Friend Groups structure in terms of number of people?
-the implementation has O(n^2), where n represents the number of friends. Where although binary search is suppose to reduce the time to find the key but inseting new elements into the vectors still talke O(n). And when the operation repeats for lots of people, the total time is growing quadratically. 
-...
+Our implementation uses a hashtable for the map and the standard vector for union fins. Our growth rate seems to be about O(n) when inserting n friends and O(1) when we are inserting or  finding a friend inside the table. Overall the time depends heavily on the number of friendship.
 
 ### Does it appear to grow faster or slower than expected?
-...
-My implementation appears to grow faster in execution time than expected. Compared to the scaled instructor results, my implementation takes significantly longer to process the larger datasets. This suggests that my implementation is less efficient as the number of people increases.
+Our implementation appears to grow approximately as expected. As the number of people and connections increases, the execution time increases as well. However, after switching from sorted vectors to a hash table, our execution times became significantly faster, even on the larger datasets. Our implementation now performs faster than the scaled instructor benchmarks on all four datasets.
 
 
 ### If your implementation is deviating, why do you believe your implementation is deviating from what might be expected?
-...
-My implementation deviates from the expected performance because it uses vectors to store names and their corresponding IDs. Although binary search makes finding names faster, inserting a new name into its sorted position requires shifting existing elements. As the dataset becomes larger, more elements may need to be shifted, increasing the execution time.
+Our previous implementation used sorted vectors to store names and their corresponding IDs. Although binary search reduced the time required to find a name, inserting a new name required shifting existing elements, which made the implementation slower on larger datasets. We then changed the Map to use a hash table with separate chaining. This allows insertion and lookup to take O(1) time on average without shifting the existing elements. Rehashing also helps prevent buckets from becoming too crowded, improving overall performance.
 
 ### What do you believe is the dominant structure/algorithm in your implementation?
-...
-I think is the map implemetation sinc eit is using storted vectors to store the names and the ids. Even if the binary is supposed to reduce the time but the inserting process still require shifting the existing elements in the vector which can be less efficient. 
+We think that it is the map implementation as we had to constanly change how we implemented the map inorder to be within the performance time. During our previous implementation, they worked well with small and medium datasets while performing badly on the larger dataset but after we swaped to hash table performance time imporved significantly hence map beign the dominant structure.

@@ -5,26 +5,18 @@ Student 1: Penny He (923759739)
 Student 2: Kristina Abdullina (924726033)
 
 ## Project Status
-The project is implemented and passes all 40 provided tests, including 20 Map tests, 18 Weighted Quick Union tests, and 2 Friend Groups tests.
+The project is implemented and passes all 41 tests, including 20 Map tests, 18 Weighted Quick Union tests, and 2 Friend Groups tests. We added one test to Friend Groups.
 
 The implementation uses CVectorMap to store people's names and corresponding element IDs, CWeightedQuickUnion to manage connected groups, and CFriendGroups to handle friendship operations.
 
 The program successfully processes all four provided datasets and determines how many additional friendships are needed to connect everyone into one group.
 
-Valgrind reported zero memory errors and no definitely, indirectly, or possibly lost memory. The final code coverage report showed 99.2% line coverage and 87.5% function coverage.
+Valgrind reported zero memory errors and no definitely, indirectly, or possibly lost memory. The final code coverage report showed 100% line coverage and 87.5% function coverage.
 
 ## Known Issues
-The main known issue is performance when processing larger datasets.
+There are currently no known functional issues with our implementation. All 41 tests pass, and the program meets the performance requirements on the provided datasets.
 
-Originally, CVectorMap used linear search to find keys, which took O(n) time. We changed the implementation to maintain sorted keys and use binary search, reducing lookup complexity to O(log n).
-
-However, inserting new elements into the middle of a sorted vector still requires shifting existing elements, which takes O(n) time. This becomes expensive when processing a large number of people.
-
-For the dataset containing 100,000 people and 416,102 connections, the program took approximately 84.55 seconds, compared with the CPU-adjusted instructor benchmark of approximately 1.34 seconds.
-
-Another difference is that the provided medium dataset contains 3,926 connections, while the instructor's analysis table lists 3,927.
-
-No known functional failures remain in the provided tests
+One minor discrepancy is that the provided medium dataset contains 3,926 connections, while the instructor's analysis table lists 3,927.
 
 ## Code References
 C++ reference for std::vector: https://en.cppreference.com/w/cpp/container/vector
@@ -121,7 +113,7 @@ What ForEach() should do
 4. Continue until all pairs have been visited.
 Important: ForEach() does not search for one specific key, insert elements, or remove elements. Its purpose is to process every existing key-value pair.
 
-### Changes 3
+### Changes 2
     void ForEach(typename CMap<K, V>::TEntityFunction fun) override {
         
          for(std::size_t i = 0 ; i < keys.size(); i++){
@@ -234,7 +226,7 @@ memory classified as "still reachable" is different from memory classified as "d
 
 Still-reachable memory means that the program still has a way to access the allocated memory when it exits.
 
-### changes 10 
+### changes 9
 
 I reviewed the Valgrind output and confirmed the following results:
 
@@ -250,4 +242,32 @@ Error summary: 0 errors
 
 Since Valgrind did not identify any lost memory or memory errors, I did not make additional changes to the implementation based on this result.
 
+### Prompt 9
 
+Why is our Map implementation still performing poorly even after implementing binary search? Our execution time is not within 30% of the instructor's benchmark.
+
+### Response 9
+
+Although binary search improved the lookup time to O(log n), inserting new elements into the sorted vectors still takes O(n) time because existing elements need to be shifted to maintain their order. When processing larger datasets, these repeated insertions significantly increase the overall execution time. ChatGPT suggested considering alternative data structures, such as binary search trees or hash tables, to improve insertion performance and meet the 30% requirement.
+
+## Changes 10
+
+We reviewed our Map implementation and determined that binary search alone was not enough to meet the performance requirement. We decided to explore other data structures that could improve insertion performance.
+
+### Prompt 10
+
+what would be the runtime for a hashmap?
+
+## Response 10
+A hash map (hash table) has an average-case runtime of O(1) for insertion, lookup, and removal.
+Operation	Average case	Worst case
+Add()	O(1) amortized	O(n)
+Find()	O(1)	O(n)
+Remove()	O(1)	O(n)
+Size()	O(1)	O(1)
+ForEach()	O(n)	O(n)
+
+Here, \(n\) represents the number of stored key-value pairs.
+
+### changes 10
+We decided to change our Map implementation from sorted vectors to a hash table using separate chaining.
