@@ -3,89 +3,96 @@
 
 #include "Map.h"
 #include <vector>
-#include <cstddef>
+#include <utility>
+#include <functional>
 
 template <typename K, typename V>
 class CVectorMap : public CMap<K, V> {
 private:
-    std::vector<K> keys;
-    std::vector<V> values;
+    std::vector<std::vector<std::pair<K, V>>> buckets{16};
+    std::size_t count = 0;
+    void Rehash() {
+    std::size_t newSize = buckets.size() * 2;
+
+    std::vector<std::vector<std::pair<K, V>>> newBuckets(newSize);
+
+    for (const auto& bucket : buckets) {
+        for (const auto& entry : bucket) {
+            std::size_t newIndex =
+                std::hash<K>{}(entry.first) % newSize;
+
+            newBuckets[newIndex].push_back(entry);
+        }
+    }
+
+    buckets = std::move(newBuckets);
+}
 
 public:
     std::size_t Size() const override {
-        return keys.size();
+        return count;
     }
 
     bool Add(const K& key, V val) override {
-        std::size_t left = 0;
-        std::size_t right = keys.size();
+        std::size_t index = std::hash<K>{}(key) % buckets.size();
 
-        while(left<right){
-                std::size_t mid = left + (right - left) / 2;
-
-            if (key < keys[mid]) {
-                right = mid;
-            }          
-            else if (key > keys[mid]) {
-                left = mid + 1;
+         for (const auto& entry : buckets[index]) {
+            if (entry.first == key) {
+                return false;
             }
-            else {
-               return false;
-            }
-           
         }
-    keys.insert(keys.begin() + left, key);
-    values.insert(values.begin() + left, val);
-    return true;
+        if ((count + 1.0) / buckets.size() > 0.75) {
+        Rehash();
+        index = std::hash<K>{}(key) % buckets.size();
+}
+        buckets[index].push_back({key, val});
+        count++;
 
-    }
-    //alphabetical now 
+        return true;
+
+        }
+           
+
+
 
     bool Remove(const K& key) override {
-        for(std::size_t i = 0 ; i < keys.size(); i++){
-            if(keys[i]==key){
-                keys.erase(keys.begin() + i);
-                values.erase(values.begin() + i);
-                return true;
-            }
+        std::size_t index = std::hash<K>{}(key) % buckets.size();
+        auto& bucket = buckets[index];
+
+        for (std::size_t i = 0; i < bucket.size(); i++) {
+            if (bucket[i].first == key) {
+             bucket.erase(bucket.begin() + i);
+                count--;
+            return true;
         }
+        }
+
         return false;
     }
         
     
 
     bool Find(const K& key, V& val) const override {
-        std::size_t left = 0;
-        std::size_t right = keys.size();
-
-        while(left<right){
-                std::size_t mid = left + (right - left) / 2;
-
-            if (key < keys[mid]) {
-                right = mid;
-            }          
-            else if (key > keys[mid]) {
-                left = mid + 1;
-            }
-            else {
-                val = values[mid];
+        std::size_t index = std::hash<K>{}(key) % buckets.size();
+        for (const auto& entry : buckets[index]) {
+            if (entry.first == key) {
+                val = entry.second;
                 return true;
-            }
-           
+            }       
         }
         return false;
-
     }
-    //swapped to binary search 
+
 
     void ForEach(typename CMap<K, V>::TEntityFunction fun) override {
         
-         for(std::size_t i = 0 ; i < keys.size(); i++){
-            fun(keys[i],values[i]);
-         }
+      for (const auto& bucket : buckets) {
+        for (const auto& entry : bucket) {
+            fun(entry.first, entry.second);
+        }
     }
-    //asked gpt if there were any ways to print and save the line so fcode bign written
-    //couldn't remeber for each did had to ask gpt 
+    }
+  
 };
 
 #endif
